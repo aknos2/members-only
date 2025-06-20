@@ -1,0 +1,35 @@
+{
+  "name": "members-only",
+  "version": "1.0.0",
+  "description": "Odin Poject Members Only",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "npm install && node db/populatedb.js",
+    "dev": "node --watch app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aknos2/members-only.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/aknos2/members-only/issues"
+  },
+  "homepage": "https://github.com/aknos2/members-only#readme",
+  "dependencies": {
+    "bcryptjs": "^3.0.2",
+    "connect-pg-simple": "^10.0.0",
+    "date-fns": "^4.1.0",
+    "dotenv": "^16.5.0",
+    "ejs": "^3.1.10",
+    "express": "^5.1.0",
+    "express-async-handler": "^1.2.0",
+    "express-session": "^1.18.1",
+    "express-validator": "^7.2.1",
+    "passport": "^0.7.0",
+    "passport-local": "^1.0.0",
+    "pg": "^8.16.0"
+  }
+}
