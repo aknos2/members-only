@@ -31,6 +31,7 @@ app.use(session({
   store: new (pgSession(session))({
     pool: pool,
     tableName: 'session',
+    createTableIfMissing: true,
   }),
   secret: process.env.SESSION_SECRET,
   resave: false,
@@ -67,5 +68,10 @@ app.listen(PORT, () => {
 // Global error handler
 app.use((err, req, res, next) => {
   console.log(err);
+
+  if (res.headersSent) {
+    return next(err); // delegate to default Express error handler
+  }
+
   res.status(err.statusCode || 500).send(err.message);
 });
