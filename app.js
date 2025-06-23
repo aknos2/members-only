@@ -1,14 +1,18 @@
 import express from 'express';
 import path from 'path';
 import session from 'express-session';
+import pgSession from 'connect-pg-simple';
 import passport from 'passport';
+import dotenv from 'dotenv';
 import { fileURLToPath } from 'url';
+
+import pool from './db/pool.js'; 
 import { indexRouter } from './routers/indexRouter.js';
 import { signupRouter } from './routers/signupRouter.js';
 import { loginRouter } from './routers/loginRoute.js';
-import './config/passport.js';
 import { membershipRouter } from './routers/membershipRouter.js';
-import dotenv from 'dotenv';
+import './config/passport.js';
+
 dotenv.config();
 
 const __filename = fileURLToPath(import.meta.url);
@@ -21,11 +25,23 @@ app.set("view engine", "ejs");
 // Middleware
 app.use(express.static('public'));
 app.use(express.urlencoded({extended: true}));
-app.use(session({ secret: process.env.SESSION_SECRET, resave: false, saveUninitialized: false }));
+
+// ✅ Use proper PostgreSQL-backed session store
+app.use(session({
+  store: new (pgSession(session))({
+    pool: pool,
+    tableName: 'session',
+  }),
+  secret: process.env.SESSION_SECRET,
+  resave: false,
+  saveUninitialized: false,
+  cookie: { maxAge: 30 * 24 * 60 * 60 * 1000 } // 30 days
+}));
+
 app.use(passport.initialize());
 app.use(passport.session());
 
-// Makes user available in all templates
+// Make user available in all templates
 app.use((req, res, next) => {
   res.locals.user = req.user;
   next();
@@ -38,18 +54,17 @@ app.use('/', loginRouter);
 app.use('/', membershipRouter);
 app.get("/log-out", (req, res, next) => {
   req.logout((err) => {
-    if (err) {
-      return next(err);
-    }
+    if (err) return next(err);
     res.redirect("/");
   });
 });
 
 const PORT = process.env.PORT || 3030;
-app.listen(PORT, (req, res) => {
+app.listen(PORT, () => {
   console.log(`Listening on port ${PORT}`);
 });
 
+// Global error handler
 app.use((err, req, res, next) => {
   console.log(err);
   res.status(err.statusCode || 500).send(err.message);
