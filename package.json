@@ -5,7 +5,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "start": "npm install && node db/populatedb.js",
+    "start": "node app.js",
     "dev": "node --watch app.js"
   },
   "repository": {
