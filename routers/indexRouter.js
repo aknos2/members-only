@@ -1,7 +1,9 @@
 import { Router }from 'express';
-import { displayMessages, sendMessages } from '../controllers/logController.js';
+import { deleteMessageHandler, displayMessages, getMembershipStatusToRouter, sendMessages } from '../controllers/logController.js';
 
 export const indexRouter = Router();
 
 indexRouter.get('/', displayMessages);
+indexRouter.get('/', getMembershipStatusToRouter);
 indexRouter.post('/', sendMessages);
+indexRouter.post('/:id/delete', deleteMessageHandler);

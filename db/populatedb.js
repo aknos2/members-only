@@ -6,18 +6,17 @@ dotenv.config();
 
 
 const SQL = `
-  CREATE TABLE IF NOT EXISTS users (
+  DROP TABLE IF EXISTS messages;
+  DROP TABLE IF EXISTS users;
+
+  CREATE TABLE users (
     id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
     first_name TEXT NOT NULL,
     last_name TEXT NOT NULL,
     email TEXT NOT NULL UNIQUE,
-    password TEXT NOT NULL
+    password TEXT NOT NULL,
+    membership_status TEXT DEFAULT NULL
   );
-
-  INSERT INTO users (first_name, last_name, email, password)
-  VALUES
-    ('Amando', 'Macarroni', 'amando@gmail.com', 'abc123'),
-    ('Charles', 'Coconut', 'charles@gmail.com', 'aaa123');
 
   CREATE TABLE IF NOT EXISTS messages (
     id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
@@ -26,11 +25,19 @@ const SQL = `
     created_at TIMESTAMP DEFAULT NOW()
   );
 
+  TRUNCATE TABLE messages, users RESTART IDENTITY CASCADE;
+
+  INSERT INTO users (first_name, last_name, email, password, membership_status)
+  VALUES
+    ('Amando', 'Macarroni', 'amando@gmail.com', 'Abc123', 'silver'),
+    ('Charles', 'Coconut', 'charles@gmail.com', 'Aaa123', null);
+
   INSERT INTO messages (user_id, content)
   VALUES
     ((SELECT id FROM users WHERE first_name = 'Amando'), 'Hi there!'),
     ((SELECT id FROM users WHERE first_name = 'Charles'), 'Hello world!');
 `;
+
 
 
 async function main() {

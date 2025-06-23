@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include('partials/head.ejs') %>
+<body>
+  <%- include('partials/nav.ejs') %>
+
+  <div class="membership-form">
+    <h2>Answer the quiz:</h2>
+    <p>What color is the sky?</p>
+    <form action="/membership" method="POST">
+      <label for="answer">Answer:</label>
+      <input type="text" id="answer" name="answer" required>
+      <button type="submit">Enter</button>
+    </form>
+    
+    <%- include("partials/errors.ejs") %>
+
+  </div>
+</body>
+</html>

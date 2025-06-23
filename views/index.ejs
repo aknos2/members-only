@@ -4,26 +4,46 @@
 <body>
   <%- include ('partials/nav.ejs') %>
 
-  <div class="message-board">
+  <div class="message-board" id="message-board">
     <% if (allMessages.length > 0) {%>
        <% allMessages.forEach((message) => { %>
         <div class="message-wrap">
-          <div class="message-username">
+          <div class="message-username <%= !user?.membership_status ? 'blurred' : '' %>">
             <p class="name"><%= message.username %></p>
             <p class="date"><em><%= message.created_at %></em></p>
           </div>
-          <p class="text"><%= message.content %></p>
+          <p class="text"><%= message.content %>
+            <% if (user?.membership_status === 'admin') { %>
+            <form action="/<%= message.id %>/delete" method="POST" style="display:inline;">
+              <button class="delete-btn">Delete</button>
+            </form>
+            <% } %>
+          </p>
         </div>
+        <hr>
        <% }) %>
     <% } %>
   </div>
   
-  <div class="send-message-container">
-    <form action="/" method="POST">
-      <label for="message">Message:</label>
-      <textarea name="message" id="message"></textarea>
-      <button class="send-btn">Send</button>
-    </form>
-  </div>
+  <% if (locals.user) { %>
+    <div class="send-message-container">
+      <form action="/" method="POST">
+        <label for="message">Message:</label>
+        <textarea name="message" id="message"></textarea>
+        <button class="send-btn">Send</button>
+      </form>
+    </div>
+
+    <%- include("partials/errors.ejs") %>
+  <% } %>
+  
+  <script>
+    window.addEventListener('DOMContentLoaded', () => {
+      const messageBoard = document.querySelector("#message-board");
+      if (messageBoard) {
+        messageBoard.scrollTop = messageBoard.scrollHeight;
+      } 
+    });
+  </script>
 </body>
 </html>

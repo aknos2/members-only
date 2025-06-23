@@ -1,12 +1,29 @@
  <nav>
     <div class="logo">
       <a href="/"><h1>Members Only</h1></a>
+      <% if(locals.user) {%>
+        <div class="user-status member">
+          <p class="welcome">Welcome back <span><%= user.first_name %></span></p>
+          <p>Membership: <%= user.membership_status || "none" %></p>
+        </div>
+      <% } else { %> 
+          <div class="user-status newcomer">
+          <p class="welcome">Create an account or login to send a message</p>
+        </div>
+        <% } %>
     </div>
-    <ul>
-       <ul>
+      <ul>
         <li><a href="/">Home</a></li>
-        <li><a href="/sign-up">Sign Up</a></li>
-        <li><a href="/login">Login</a></li>
+        <% if(!locals.user) {%>
+           <li><a href="/sign-up">Sign Up</a></li>
+        <% } %>
+        <% if(locals.user) {%>
+           <li><a href="/log-out">Log Out</a></li>
+        <% if (!user?.membership_status) { %>
+            <a class="membership-link" href="/membership">Become a member</a>
+        <% } %>
+        <% } else { %> 
+          <li><a href="/login">Login</a></li>
+        <% } %>
       </ul>
-    </ul>
   </nav>
