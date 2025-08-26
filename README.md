@@ -9,5 +9,5 @@ https://members-only-yayu.onrender.com
 
 ## Screenshots
 
-<img scr="./public/screenshot1.png" alt="screenshot">
-<img scr="./public/screenshot2.png" alt="screenshot">
+<img src="./public/screenshot1.png" alt="screenshot">
+<img src="./public/screenshot2.png" alt="screenshot">
